@@ -1,10 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
 from torch.utils.data import Dataset
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from typing import Tuple, List, Any
+
+from transformers.tokenization_utils_base import BatchEncoding
 
 class Trainer:
     def __init__(self, model: nn.Module, dataset: Dataset, criterion: Any, optimizer_cls: type, lr: float) -> None:
@@ -23,24 +26,40 @@ class Trainer:
             self.model.cuda()
 
         self.optimizer = optimizer_cls(model.parameters(), lr=lr)
+        # self.scheduler = optim.lr_scheduler.LinearLR(self.optimizer)
 
     def train(self, epochs: int, eval_every_n_iterations: int = 100) -> None:
         iteration_count = 0
 
         for epoch in range(epochs):
             self.model.train()
-            for inputs, labels in self.dataset.train_loader:
+            for batch in self.dataset.train_loader:
+                if isinstance(batch, BatchEncoding):
+                    inputs = {key: batch[key] for key in batch if key != "labels"}
+                    labels = batch["labels"]
 
-                if torch.cuda.is_available():
-                    inputs = inputs.cuda()
-                    labels = labels.cuda()
+                    if torch.cuda.is_available():
+                        for key in inputs:
+                            inputs[key] = inputs[key].cuda()
+                        labels = labels.cuda()
+
+                else:
+                    inputs, labels = batch
+                    if torch.cuda.is_available():
+                        inputs = inputs.cuda()
+                        labels = labels.cuda()
 
                 self.optimizer.zero_grad()
-                output = self.model(inputs)
+
+                if isinstance(inputs, dict):
+                    output = self.model(**inputs)[0]
+                else:
+                    output = self.model(inputs)
+
                 loss = self.criterion(output, labels)
                 loss.backward()
                 self.optimizer.step()
-
+            
                 self.train_losses.append(loss.item())
                 iteration_count += 1
 
@@ -50,7 +69,8 @@ class Trainer:
                     self.eval_losses.append(eval_loss)
                     self.accuracies.append(accuracy)
                     print(f"Iteration {iteration_count}, Training loss: {loss.item():.4f}, Eval loss: {eval_loss:.4f}, Accuracy: {accuracy:.4f}")
-
+                
+            # self.scheduler.step()
     
         # Evaluate at the end of training
         eval_loss, accuracy = self.evaluate()
@@ -66,12 +86,27 @@ class Trainer:
         self.true_labels = []  # Reset true labels
 
         with torch.no_grad():
-            for inputs, labels in self.dataset.test_loader:
-                if torch.cuda.is_available():
-                    inputs = inputs.cuda()
-                    labels = labels.cuda()
+            for batch in self.dataset.test_loader:
+                if isinstance(batch, BatchEncoding):
+                    inputs = {key: batch[key] for key in batch if key != "labels"}
+                    labels = batch["labels"]
 
-                output = self.model(inputs)
+                    if torch.cuda.is_available():
+                        for key in inputs:
+                            inputs[key] = inputs[key].cuda()
+                        labels = labels.cuda()
+
+                else:
+                    inputs, labels = batch
+                    if torch.cuda.is_available():
+                        inputs = inputs.cuda()
+                        labels = labels.cuda()
+
+
+                if isinstance(inputs, dict):
+                    output = self.model(**inputs)[0]
+                else:
+                    output = self.model(inputs)
                 loss = self.criterion(output, labels)
                 total_loss += loss.item()
 
@@ -86,4 +121,3 @@ class Trainer:
     def __del__(self) -> None:
         if torch.cuda is not None and torch.cuda.is_available():
             self.model.cpu()
-        
