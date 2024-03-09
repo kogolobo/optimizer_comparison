@@ -19,25 +19,6 @@ class Experiment:
         self.eval_losses = trainer.eval_losses
         self.accuracies = trainer.accuracies
 
-# def plot_losses(train_losses: List[float], eval_losses: List[float], eval_iterations: List[float]) -> None:
-#         plt.figure(figsize=(12, 6))
-#         plt.plot(train_losses, label='Training Loss', alpha=0.5)
-#         plt.plot(eval_iterations, eval_losses, label='Evaluation Loss', marker='o', linestyle='-', linewidth=2)
-#         plt.xlabel('Iteration')
-#         plt.ylabel('Loss')
-#         plt.title('Training and Evaluation Loss Over Iterations')
-#         plt.legend()
-#         plt.show()
-
-# def plot_accuracy(eval_iterations: List[float], accuracies: List[float] ) -> None:
-#     plt.figure(figsize=(12, 6))
-#     plt.plot(eval_iterations, accuracies, label='Accuracy', marker='o', linestyle='-', linewidth=2)
-#     plt.xlabel('Iteration')
-#     plt.ylabel('Accuracy')
-#     plt.title('Model Accuracy Over Iterations')
-#     plt.legend()
-#     plt.show()
-
 def plot_train_losses(experiments: List[Experiment]) -> None:
     # Plot losses in different colors on a single plot, with a legend
     plt.figure(figsize=(12, 6))
