@@ -20,7 +20,6 @@ class Experiment:
         self.accuracies = trainer.accuracies
 
 def plot_train_losses(experiments: List[Experiment]) -> None:
-    # Plot losses in different colors on a single plot, with a legend
     plt.figure(figsize=(12, 6))
     for exp in experiments:
         plt.plot(exp.train_losses, label=exp.optimizer_name, alpha=0.5)
@@ -31,7 +30,6 @@ def plot_train_losses(experiments: List[Experiment]) -> None:
     plt.show()
 
 def plot_eval_losses(experiments: List[Experiment]) -> None:
-    # Plot losses in different colors on a single plot, with a legend
     plt.figure(figsize=(12, 6))
     for exp in experiments:
         plt.plot(exp.eval_iterations, exp.eval_losses, label=exp.optimizer_name, marker='o', linestyle='-', linewidth=2)
@@ -42,7 +40,6 @@ def plot_eval_losses(experiments: List[Experiment]) -> None:
     plt.show()
 
 def plot_accuracies(experiments: List[Experiment]) -> None:
-    # Plot losses in different colors on a single plot, with a legend
     plt.figure(figsize=(12, 6))
     for exp in experiments:
         plt.plot(exp.eval_iterations, exp.accuracies, label=exp.optimizer_name, marker='o', linestyle='-', linewidth=2)
