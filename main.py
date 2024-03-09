@@ -59,7 +59,7 @@ for exp in experiments:
         dataset, 
         criterion, 
         exp.optimizer_cls, 
-        args.lr if exp.optimizer_name != "SGD" else 0.01
+        args.lr
     )
     trainer.train(args.epochs, args.eval_iterations)
     exp.add_trainer_state(trainer)
