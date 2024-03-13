@@ -89,11 +89,11 @@ Figure 4: SST2 training loss curves. RMSProp and SGD are the most unstable. Adam
 Figures 5 and 6: SST2 evaluation loss and accuracy curves. SGD has the lowest evaluation loss, but Adam and Adagrad have the highest accuracy. The increasing evaluation loss indicates potential overfitting.
 
 ### MNLI
-The Multi-Genre Natural Language Inference Corpus is a dataset of sentence pairs with a crowd-sourced textual annotation labels. The first sentence in the pair is the premise and the second one is the hypothesis. The task is to decide whether the premise entails the hypothesis: \textit{contradiction} (0), \textit{neutral} (1), and \textit{entailment} (2). The test set is split into the "matched" category which resembles the distribution of the training data and the "mismatched" category which does not. We evaluate only on the "matched" test category. The training set has 392,702 examples, and the "matched" test set has 9,815 examples.
+The Multi-Genre Natural Language Inference Corpus is a dataset of sentence pairs with a crowd-sourced textual annotation labels. The first sentence in the pair is the premise and the second one is the hypothesis. The task is to decide whether the premise entails the hypothesis: *contradiction* (0), *neutral* (1), and *entailment* (2). The test set is split into the "matched" category which resembles the distribution of the training data and the "mismatched" category which does not. We evaluate only on the "matched" test category. The training set has 392,702 examples, and the "matched" test set has 9,815 examples.
 
 Before comparing the optimizers, we want to address why RMSProp is not included in any of the figures below. RMSProp proved to be too unstable and was not able to decrease the training loss. We tried multiple learning rates to no avail.
 
-We finetune DistilBERT on the task with learning rate of $10^-2$ for SGD and $10^-5$ for the other optimizers. From the training loss in Figure 7 we see that all optimizers are similarly unstable. However, Adam seems to decrease fastest.
+We finetune DistilBERT on the task with learning rate of $10^{-2}$ for SGD and $10^{-5}$ for the other optimizers. From the training loss in Figure 7 we see that all optimizers are similarly unstable. However, Adam seems to decrease fastest.
 
 Looking at the plots in Figures 8 and 9, we note that Adam has the least loss and the highest test accuracy of $80.21\%$. Adagrad starts off better than SGD for both evaluation loss and training accuracy. Over time SGD catches up and beats it on both metrics.
 
