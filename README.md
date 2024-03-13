@@ -37,7 +37,7 @@ Looking at the update history we see that if the accumulated gradient is small t
 
 $v_t = \beta * v_{t-1} + (1-\beta)(\nabla_\theta J(\theta, x,y))^2$
 
-$\theta_{t+1} = \theta_t - \frac{n}{\sqrt{v_t + \epsilon}} * \nabla_\theta J(\theta, x,y)$.
+$\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{v_t + \epsilon}} * \nabla_\theta J(\theta, x,y)$.
 
 Here, $v_t$ is the sum of squared gradients. $\frac{\partial J}{\partial \theta}$ is the gradient of the cost function with respect to the parameters, $\eta$ is the learning rate, and $\beta$ is the moving average parameter, set to $0.9$ by default.
 
@@ -47,9 +47,9 @@ $m_t = \beta_1 * m_{t-1} + (1-\beta_1)*\nabla_\theta J(\theta, x,y)$
 
 $v_t = \beta_2 * v_{t-1} + (1-\beta_2) * (\nabla_\theta J(\theta, x,y))^2$
 
-$\hat{m_t} = \frac{m_t}{1 - \beta^t_1} \quad \hat{v_t} = \frac{v_t}{1- \beta^t_2}$
+$\hat{m_t} = \frac{m_t}{1 - \beta_1} \quad \hat{v_t} = \frac{v_t}{1- \beta_2}$
 
-$\theta_{t+1} = \theta_t - \frac{n}{\sqrt{\hat{v_t} + \epsilon}} * \hat{m_t}$
+$\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v_t} + \epsilon}} * \hat{m_t}$
 
 ## Experiments
 We run our experiments on Nvidia A100 GPU in the Google Collab environment. We use a batch size of 512 and a constant learning rate, which we tune for each task. We use the accuracy metric to evaluate our models.
